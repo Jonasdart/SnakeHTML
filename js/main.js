@@ -56,11 +56,11 @@ function clearBoard() {
 function game() {
     childrens = document.getElementById(`row-${snakeHead[0]}`).children;
     children = childrens[snakeHead[1]]
-    if(children.classList.contains("body")){
+    if (children.classList.contains("body")) {
         colide();
     }
     snakeBodyElements.unshift(children);
-    if(children.classList.contains("food")){
+    if (children.classList.contains("food")) {
         consumeFood();
     }
     children.classList.add(`body`);
@@ -68,37 +68,37 @@ function game() {
     clearBoard();
 }
 
-function generateFood(){
-    while (true){
+function generateFood() {
+    while (true) {
         x = Math.floor(Math.random() * columns);
         y = Math.floor(Math.random() * lines);
 
         boardItems = document.getElementById("tabuleiro").children
         cell = boardItems[x].children[y]
-        if(cell.classList.contains("body")){
+        if (cell.classList.contains("body")) {
             console.log("Generating food again...");
-        }else {
+        } else {
             cell.classList.add("food");
             break;
         }
-    
+
     }
 }
 
-function consumeFood(){
+function consumeFood() {
     snakeSize += 1;
     food = document.getElementsByClassName("food");
     food[0].classList.remove("food");
     generateFood();
 }
 
-function colide(){
+function colide() {
     stopAutoMove();
     board = document.getElementById("tabuleiro")
     board.innerHTML = "GAME OVER!";
-    board.innerHTML += `<br>Sua Pontuacao: ${snakeSize-2}`;
+    board.innerHTML += `<br>Sua Pontuacao: ${snakeSize - 2}`;
     board.classList.add("gameover")
-    
+
 }
 
 function move(goTo) {
@@ -114,12 +114,12 @@ function move(goTo) {
                 valideWall();
                 game();
                 startAutoMove();
-            }else{
+            } else {
                 return false;
             }
         }
     }
-    
+
     function direct() {
         if (goTo === "w") {
             if (lastCommand !== "s") {
@@ -150,7 +150,7 @@ function move(goTo) {
             return false;
         }
     }
-    
+
     function valideWall() {
         if (snakeHead[0] >= lines) {
             snakeHead[0] = 0;
@@ -172,7 +172,7 @@ function move(goTo) {
 function toControl() {
     command = control.value.toLowerCase();
     if (["w", "a", "s", "d"].includes(command)) {
-        if(move(command)){
+        if (move(command)) {
             lastCommand = command;
         }
     }
@@ -180,7 +180,7 @@ function toControl() {
 }
 
 function startAutoMove() {
-    autoMove = setInterval(move, (1000/(snakeSize/2)));
+    autoMove = setInterval(move, (1000 / (snakeSize / 2)));
 }
 function stopAutoMove() {
     clearInterval(autoMove);
