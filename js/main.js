@@ -4,7 +4,8 @@ var autoMove;
 var lastCommand = "d";
 var snakeHead = [lines / 2, columns / 2];
 var snakeSize = 2;
-var snakeBodySymbol = "l";
+// var snakeBodySymbol = "&#128013;";
+var snakeBodySymbol = "";
 var snakeBodyElements = [];
 
 
