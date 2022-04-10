@@ -81,7 +81,6 @@ function generateFood() {
             console.log("Generating food again...");
         } else {
             cell.classList.add("food");
-            console.log(x, y);
             break;
         }
 
@@ -96,13 +95,11 @@ function consumeFood() {
 }
 
 function colide() {
-    gameStatus = "stopped";
     stopAutoMove();
-    clearInterval(playing);
     board = document.getElementById("tabuleiro")
     board.innerHTML = "GAME OVER!";
     board.innerHTML += `<br>Sua Pontuacao: ${snakeSize - 2}`;
-    board.innerHTML += '<br><button onClick="window.location.reload();">Jogar novamente</button>'
+    board.innerHTML += '<br><button id="play-again" onClick="window.location.reload(); autofocus">Jogar novamente</button>'
     document.getElementById("container").classList.add("gameover")
 }
 
@@ -174,47 +171,44 @@ function move(goTo) {
 }
 
 
-function toControl() {
-    command = control.value.toLowerCase();
+function toControl(command) {
+    command = command.key
+
+    if (command === "Escape" || command === " "){
+        pause()
+    }
+    
+    command = command.replace('ArrowUp', 'w');
+    command = command.replace('ArrowDown', 's');
+    command = command.replace('ArrowLeft', 'a');
+    command = command.replace('ArrowRight', 'd');
     if (["w", "a", "s", "d"].includes(command)) {
         if (move(command)) {
             lastCommand = command;
         }
     }
-    control.value = "";
 }
 
 function startAutoMove() {
     gameStatus = "playing";
-    autoMove = setInterval(move, (1000 / (snakeSize / 2)));
+    autoMove = setInterval(move, (1000 / (snakeSize / 3)));
 }
 function stopAutoMove() {
     gameStatus = "paused";
     clearInterval(autoMove);
 }
 
-control = document.getElementById("control")
-control.addEventListener('input', toControl)
+document.onkeydown = toControl;
 
 function pause() {
-    if (document.activeElement !== control && lastCommand) {
+    if (lastCommand) {
         if (gameStatus !== "paused") {
             stopAutoMove();
             alert("Jogo pausado! Retomar?")
-            control.focus();
-            return
-        }
-    } else {
-        if (gameStatus === "paused" && lastCommand) {
-            startAutoMove();
-            return
+            startAutoMove()
         }
     }
-    control.focus();
 }
-
-playing = setInterval(pause, 100);
-
 
 boardCreate();
 game()
