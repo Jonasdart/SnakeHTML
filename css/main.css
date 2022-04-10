@@ -8,16 +8,15 @@
 #containerFull {
     width: 1000;
     border: 3px solid #000;
-    margin: 0 auto;
 }
-  
+
 #container {
     border: 3px solid #000;
     width: 1000px;
     height: 600px;
     border-radius: 5px;
     cursor: cell;
-    float: left;
+    margin: 0 auto;
 }
 
 .row {
