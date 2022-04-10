@@ -1,12 +1,13 @@
+const columns = 14;
 const lines = 8;
-const columns = 8;
 var autoMove;
-var lastCommand = "d";
-var snakeHead = [lines / 2, columns / 2];
+var lastCommand = "";
+var snakeHead = [columns / 2, lines / 2];
 var snakeSize = 2;
 // var snakeBodySymbol = "&#128013;";
 var snakeBodySymbol = "";
 var snakeBodyElements = [];
+var gameStatus = "playing";
 
 
 function boardCreate() {
@@ -55,8 +56,8 @@ function clearBoard() {
 }
 
 function game() {
-    childrens = document.getElementById(`row-${snakeHead[0]}`).children;
-    children = childrens[snakeHead[1]]
+    childrens = document.getElementById(`row-${snakeHead[1]}`).children;
+    children = childrens[snakeHead[0]]
     if (children.classList.contains("body")) {
         colide();
     }
@@ -70,16 +71,17 @@ function game() {
 }
 
 function generateFood() {
+    boardItems = document.getElementById("tabuleiro").children
     while (true) {
-        x = Math.floor(Math.random() * columns);
         y = Math.floor(Math.random() * lines);
+        x = Math.floor(Math.random() * columns);
 
-        boardItems = document.getElementById("tabuleiro").children
-        cell = boardItems[x].children[y]
+        cell = boardItems[y].children[x]
         if (cell.classList.contains("body")) {
             console.log("Generating food again...");
         } else {
             cell.classList.add("food");
+            console.log(x, y);
             break;
         }
 
@@ -94,12 +96,14 @@ function consumeFood() {
 }
 
 function colide() {
+    gameStatus = "stopped";
     stopAutoMove();
+    clearInterval(playing);
     board = document.getElementById("tabuleiro")
     board.innerHTML = "GAME OVER!";
     board.innerHTML += `<br>Sua Pontuacao: ${snakeSize - 2}`;
-    board.classList.add("gameover")
-
+    board.innerHTML += '<br><button onClick="window.location.reload();">Jogar novamente</button>'
+    document.getElementById("container").classList.add("gameover")
 }
 
 function move(goTo) {
@@ -124,28 +128,28 @@ function move(goTo) {
     function direct() {
         if (goTo === "w") {
             if (lastCommand !== "s") {
-                snakeHead[0] -= 1;
+                snakeHead[1] -= 1;
                 return true;
             }
             return false;
         }
         if (goTo === "s") {
             if (lastCommand !== "w") {
-                snakeHead[0] += 1;
+                snakeHead[1] += 1;
                 return true;
             }
             return false;
         }
         if (goTo === "a") {
             if (lastCommand !== "d") {
-                snakeHead[1] -= 1;
+                snakeHead[0] -= 1;
                 return true;
             }
             return false;
         }
         if (goTo === "d") {
             if (lastCommand !== "a") {
-                snakeHead[1] += 1;
+                snakeHead[0] += 1;
                 return true;
             }
             return false;
@@ -153,17 +157,17 @@ function move(goTo) {
     }
 
     function valideWall() {
-        if (snakeHead[0] >= lines) {
-            snakeHead[0] = 0;
-        }
-        if (snakeHead[0] < 0) {
-            snakeHead[0] = lines;
-        }
-        if (snakeHead[1] >= columns) {
+        if (snakeHead[1] >= lines) {
             snakeHead[1] = 0;
         }
         if (snakeHead[1] < 0) {
-            snakeHead[1] = columns;
+            snakeHead[1] = lines - 1;
+        }
+        if (snakeHead[0] >= columns) {
+            snakeHead[0] = 0;
+        }
+        if (snakeHead[0] < 0) {
+            snakeHead[0] = columns - 1;
         }
     }
     return true;
@@ -181,16 +185,37 @@ function toControl() {
 }
 
 function startAutoMove() {
+    gameStatus = "playing";
     autoMove = setInterval(move, (1000 / (snakeSize / 2)));
 }
 function stopAutoMove() {
+    gameStatus = "paused";
     clearInterval(autoMove);
 }
 
 control = document.getElementById("control")
 control.addEventListener('input', toControl)
 
+function pause() {
+    if (document.activeElement !== control && lastCommand) {
+        if (gameStatus !== "paused") {
+            stopAutoMove();
+            alert("Jogo pausado! Retomar?")
+            control.focus();
+            return
+        }
+    } else {
+        if (gameStatus === "paused" && lastCommand) {
+            startAutoMove();
+            return
+        }
+    }
+    control.focus();
+}
+
+playing = setInterval(pause, 100);
+
+
 boardCreate();
 game()
-
 generateFood();
