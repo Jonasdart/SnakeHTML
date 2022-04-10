@@ -5,12 +5,12 @@
     -o-box-sizing: border-box;  
 }
 
-#containerFull {
-    width: 1000;
-    border: 3px solid #000;
+body {
+    background-color: teal;
 }
 
 #container {
+    background-color: white;
     border: 3px solid #000;
     width: 1000px;
     height: 600px;
@@ -57,7 +57,7 @@
 }
 
 .gameover {
-    background-color: crimson;
+    background-color: crimson !important; 
     text-align: center;
     font-size: 106px;;
 }

@@ -11,41 +11,21 @@ var gameStatus = "playing";
 
 
 function boardCreate() {
-    let tabuleiro = "";
+    let board = "";
     for (i = 0; i < lines; i++) {
-        tabuleiro += `
+        board += `
                         <div class="row line-2"  id=row-${i}>
                     `
         for (c = 0; c < columns; c++) {
-            tabuleiro += `
+            board += `
                             <div id="column-${c}"></div>
                         `
         }
-        tabuleiro += '</div>';
+        board += '</div>';
     }
-    document.getElementById("tabuleiro").innerHTML = tabuleiro;
+    document.getElementById("board").innerHTML = board;
 }
 
-// function clearBoard() {
-//     boardItems = document.getElementById("tabuleiro").children
-//     for (indexItem = 0; indexItem < boardItems.length; indexItem++) {
-//         cells = boardItems[indexItem].children;
-//         for (cellIndex = 0; cellIndex < cells.length; cellIndex++) {
-//             coord = [indexItem, cellIndex];
-//             if(_.isEqual(coord, snakeHead)){
-//                 cells[cellIndex].innerHTML = ".";
-//             }else {
-//                 cells[cellIndex].innerHTML = "";
-//                 for(x=0; x<snakeBody.length; x++){
-//                     console.log(_.isEqual(snakeBody[x], coord));
-//                     if (_.isEqual(snakeBody[x], coord)){
-//                         cells[cellIndex].innerHTML = ".";
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// }
 
 function clearBoard() {
     if (snakeBodyElements.length > snakeSize) {
@@ -71,7 +51,7 @@ function game() {
 }
 
 function generateFood() {
-    boardItems = document.getElementById("tabuleiro").children
+    boardItems = document.getElementById("board").children
     while (true) {
         y = Math.floor(Math.random() * lines);
         x = Math.floor(Math.random() * columns);
@@ -91,14 +71,14 @@ function consumeFood() {
     snakeSize += 1;
     food = document.getElementsByClassName("food");
     food[0].classList.remove("food");
+    document.getElementById("score").innerHTML = `Pontuação: ${snakeSize - 2}`
     generateFood();
 }
 
 function colide() {
     stopAutoMove();
-    board = document.getElementById("tabuleiro")
+    board = document.getElementById("board")
     board.innerHTML = "GAME OVER!";
-    board.innerHTML += `<br>Sua Pontuacao: ${snakeSize - 2}`;
     board.innerHTML += '<br><button id="play-again" onClick="window.location.reload(); autofocus">Jogar novamente</button>'
     document.getElementById("container").classList.add("gameover")
 }
@@ -174,10 +154,10 @@ function move(goTo) {
 function toControl(command) {
     command = command.key
 
-    if (command === "Escape" || command === " "){
+    if (command === "Escape" || command === " ") {
         pause()
     }
-    
+
     command = command.replace('ArrowUp', 'w');
     command = command.replace('ArrowDown', 's');
     command = command.replace('ArrowLeft', 'a');
